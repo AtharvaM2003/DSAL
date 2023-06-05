@@ -3,28 +3,18 @@
 #include <string>
 using namespace std;
 
-class node
+class Node
 {
 public:
-    node *right;
-    node *left;
-    node *root;
     char data;
+    Node *left;
+    Node *right;
 
-    node(char data, node *left, node *right)
+    Node(char data, Node *left = nullptr, Node *right = nullptr)
     {
         this->data = data;
         this->left = left;
         this->right = right;
-    }
-    node(char data)
-    {
-        this->data = data;
-    }
-
-    node()
-    {
-        root = NULL;
     }
 };
 
@@ -33,16 +23,14 @@ bool isOperator(char c)
     return (c == '+' || c == '-' || c == '*' || c == '/' || c == '^');
 }
 
-void postorder(node *root)
+void postorder(Node *root)
 {
-    if (root == NULL)
-    {
+    if (root == nullptr)
         return;
-    }
 
-    stack<node *> s;
-    node *current = root;
-    node *prev = NULL;
+    stack<Node *> s;
+    Node *current = root;
+    Node *prev = nullptr;
 
     while (current || !s.empty())
     {
@@ -53,7 +41,7 @@ void postorder(node *root)
         }
         else
         {
-            node *temp = s.top();
+            Node *temp = s.top();
 
             // If the right child exists and traversing
             // from the left child, then move right
@@ -71,12 +59,10 @@ void postorder(node *root)
     }
 }
 
-void inorder(node *root)
+void inorder(Node *root)
 {
-    if (root == NULL)
-    {
+    if (root == nullptr)
         return;
-    }
 
     if (isOperator(root->data))
     {
@@ -93,32 +79,30 @@ void inorder(node *root)
     }
 }
 
-node *exptree(string postfix)
+Node *exptree(string postfix)
 {
     if (postfix.length() == 0)
-    {
-        return NULL;
-    }
+        return nullptr;
 
-    stack<node *> s;
+    stack<Node *> s;
 
     for (char c : postfix)
     {
         if (isOperator(c))
         {
-            node *x = s.top();
+            Node *x = s.top();
             s.pop();
 
-            node *y = s.top();
+            Node *y = s.top();
             s.pop();
 
-            node *nod = new node(c, y, x);
+            Node *nod = new Node(c, y, x);
 
             s.push(nod);
         }
         else
         {
-            s.push(new node(c));
+            s.push(new Node(c));
         }
     }
 
@@ -127,11 +111,10 @@ node *exptree(string postfix)
 
 int main()
 {
-       //string postfix = "ab+cde+**";
-     string postfix;
-    cout << "Enter the expression:";
+    string postfix;
+    cout << "Enter the expression: ";
     cin >> postfix;
-    node *root = exptree(postfix);
+    Node *root = exptree(postfix);
 
     cout << "Postfix Expression: ";
     postorder(root);
